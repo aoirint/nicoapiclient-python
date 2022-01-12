@@ -1,11 +1,7 @@
 import os
-import pydantic
-from pydantic import BaseModel
-from typing import Dict
 import requests
-from requests.cookies import RequestsCookieJar
 import pickle
-from dataclasses import dataclass, Field
+from getpass import getpass
 
 class NiconicoSession:
   def __init__(self,
@@ -59,10 +55,6 @@ class NiconicoSession:
 
     self.update_session()
 
-  def smart_login(self, *args, **kwargs):
-    if not self.check_login_session_alive():
-      self.login(*args, **kwargs)
-
   def update_session(self):
     cookies = self.http_session.cookies
     session_data = {
@@ -72,15 +64,77 @@ class NiconicoSession:
     with open(self.session_file, 'wb') as fp:
       pickle.dump(session_data, fp)
 
+  def fetch_live_list(self):
+    live_list_url = 'https://papi.live.nicovideo.jp/api/relive/notifybox.content?rows=100'
+
+    res = self.http_session.get(live_list_url)
+    data = res.json()
+
+    meta = data.get('meta', {})
+    status = meta.get('status')
+
+    if status != 200:
+      error_code = meta.get('errorCode')
+      error_message = meta.get('errorMessage')
+      raise Exception(f'Error {error_code}: {error_message}')
+
+    data = data.get('data')
+    notifybox_content = data.get('notifybox_content')
+
+    return notifybox_content
+
+def command_login(args):
+  session = NiconicoSession(session_file=args.session_file)
+
+  mail_tel = os.environ.get('MAIL_TEL')
+  if not mail_tel:
+    mail_tel = input('Email or TEL: ')
+
+  password = os.environ.get('PASSWORD')
+  if not password:
+    password = getpass()
+
+  session.login(
+    mail_tel=mail_tel,
+    password=password,
+  )
+  print('Logined')
+
+def command_live_list(args):
+  session = NiconicoSession(session_file=args.session_file)
+
+  live_list = session.fetch_live_list()
+  for live_entry in live_list:
+    live_id = live_entry.get('id') # https://live.nicovideo.jp/watch/lv{live_id}
+    community_name = live_entry.get('community_name')
+    title = live_entry.get('title')
+    elapsed_time = live_entry.get('elapsed_time') # seconds
+
+    live_url = f'https://live.nicovideo.jp/watch/lv{live_id}'
+
+    print(f'[{community_name}] {title} (elapsed: {elapsed_time}s): {live_url}')
+
 
 if __name__ == '__main__':
   from dotenv import load_dotenv
   load_dotenv()
 
   import os
+  import argparse
 
-  session = NiconicoSession(session_file='session.pkl')
-  session.smart_login(
-    mail_tel=os.environ['MAIL_TEL'],
-    password=os.environ['PASSWORD'],
-  )
+  parser = argparse.ArgumentParser()
+  parser.add_argument('--session_file', type=str, default='session.pkl')
+
+  subparsers = parser.add_subparsers()
+
+  parser_login = subparsers.add_parser('login')
+  parser_login.set_defaults(handler=command_login)
+
+  parser_live_list = subparsers.add_parser('live_list')
+  parser_live_list.set_defaults(handler=command_live_list)
+
+  args = parser.parse_args()
+  if hasattr(args, 'handler'):
+    args.handler(args)
+  else:
+    parser.print_help()
