@@ -86,16 +86,16 @@ class NiconicoSession:
 def command_login(args):
   session = NiconicoSession(session_file=args.session_file)
 
-  mail_tel = os.environ.get('MAIL_TEL')
-  if not mail_tel:
-    mail_tel = input('Email or TEL: ')
+  login = args.login
+  if not login:
+    login = input('Email or TEL: ')
 
-  password = os.environ.get('PASSWORD')
+  password = args.password
   if not password:
     password = getpass()
 
   session.login(
-    mail_tel=mail_tel,
+    mail_tel=login,
     password=password,
   )
   print('Logined')
@@ -116,10 +116,6 @@ def command_live_list(args):
 
 
 if __name__ == '__main__':
-  from dotenv import load_dotenv
-  load_dotenv()
-
-  import os
   import argparse
 
   parser = argparse.ArgumentParser()
@@ -128,6 +124,8 @@ if __name__ == '__main__':
   subparsers = parser.add_subparsers()
 
   parser_login = subparsers.add_parser('login')
+  parser.add_argument('--login', type=str)
+  parser.add_argument('--password', type=str)
   parser_login.set_defaults(handler=command_login)
 
   parser_live_list = subparsers.add_parser('live_list')
