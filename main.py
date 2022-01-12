@@ -30,9 +30,9 @@ class NiconicoSession:
     return self.http_session.cookies.get('user_session')
 
   def check_login_session_alive(self) -> bool:
-    login_history_url = 'https://account.nicovideo.jp/my/history/login'
+    mypage_url = 'https://www.nicovideo.jp/my'
 
-    response = self.http_session.get(login_history_url, allow_redirects=False)
+    response = self.http_session.get(mypage_url, allow_redirects=False)
     status_code = response.status_code
 
     return status_code == 200
