@@ -32,9 +32,9 @@ class Response:
   data: ResponseData
 
 
-def following_live_list(
+def following_lives(
   session: Session,
-) -> ResponseData:
+) -> List[NotifyboxContent]:
   res = session.get(live_list_url)
   jsonres = res.json()
 
@@ -47,4 +47,4 @@ def following_live_list(
     error_message = meta.errorMessage
     raise Exception(f'Error {error_code}: {error_message}')
 
-  return resobj
+  return resobj.data.notifybox_content

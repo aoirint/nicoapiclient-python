@@ -1,4 +1,4 @@
-from nicotoolspy.cli.login import create_auth_cookies
+from nicotoolspy.cli.login import login
 
 
 if __name__ == '__main__':

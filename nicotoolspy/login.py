@@ -1,6 +1,6 @@
 from requests import Session
 from requests.cookies import RequestsCookieJar
-from ..session import create_session
+from .session import create_session
 
 login_url = 'https://account.nicovideo.jp/login/redirector'
 

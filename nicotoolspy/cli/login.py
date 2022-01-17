@@ -4,7 +4,7 @@ from nicotoolspy.login import create_auth_cookies
 from nicotoolspy.session import create_session
 
 
-def create_auth_cookies(
+def login(
   mail_tel: str = None,
   password: str = None,
   cookie_file: str = None,

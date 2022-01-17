@@ -47,10 +47,10 @@ class SocialGroup:
 
 @dataclass
 class ProgramProvider:
-  id: str
   name: str
   icon: str
   iconSmall: str
+  id: Optional[str] = None
 
 @dataclass
 class Statistics:
@@ -101,7 +101,7 @@ def recent_lives(
   offset: int = 0,
   sortOrder: SortOrderType = 'recentDesc',
   session: Session = None,
-) -> Response:
+) -> List[DataItem]:
   if session is None:
     session = create_session()
 
@@ -115,4 +115,8 @@ def recent_lives(
   res = session.get(url, params=params)
   jsonres = res.json()
 
-  return Response.__pydantic_model__.parse_obj(jsonres)
+  resobj = Response.__pydantic_model__.parse_obj(jsonres)
+  if resobj.meta.status != 200:
+    raise Exception('not ok')
+
+  return resobj.data

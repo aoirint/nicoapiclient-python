@@ -1,4 +1,4 @@
-from nicotoolspy.auth.following_live_list import following_live_list
+from nicotoolspy.auth.following_lives import following_lives
 from nicotoolspy.session import create_auth_session
 
 
@@ -15,5 +15,5 @@ if __name__ == '__main__':
   session = create_auth_session(cookie_file=cookie_file)
 
   print(
-    following_live_list(session)
+    following_lives(session)
   )
