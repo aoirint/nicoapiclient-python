@@ -99,7 +99,7 @@ class Response:
 def recent_lives(
   tab: LiveTabType = 'common',
   offset: int = 0,
-  sortOrder: SortOrderType = 'recentDesc',
+  sort_order: SortOrderType = 'recentDesc',
   session: Session = None,
 ) -> List[DataItem]:
   if session is None:
@@ -107,7 +107,7 @@ def recent_lives(
 
   params = {
     'tab': tab,
-    'sortOrder': sortOrder,
+    'sortOrder': sort_order,
   }
   if offset > 0:
     params['offset'] = offset

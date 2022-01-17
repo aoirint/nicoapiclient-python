@@ -30,7 +30,12 @@ def command_following_lives(args):
 
 def command_recent_lives(args):
   session = create_session()
-  lives = recent_lives(session=session)
+  lives = recent_lives(
+    tab=args.tab,
+    offset=args.offset,
+    sort_order=args.sort_order,
+    session=session,
+  )
 
   print(lives)
 
@@ -52,6 +57,9 @@ if __name__ == '__main__':
   parser_following_lives.set_defaults(handler=command_following_lives)
 
   parser_recent_lives = subparsers.add_parser('recent_lives')
+  parser_recent_lives.add_argument('--tab', type=str, default='common')
+  parser_recent_lives.add_argument('--offset', type=int, default=0)
+  parser_recent_lives.add_argument('--sort_order', type=str, default='recentDesc')
   parser_recent_lives.set_defaults(handler=command_recent_lives)
 
   args = parser.parse_args()
