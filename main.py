@@ -44,8 +44,8 @@ if __name__ == '__main__':
   subparsers = parser.add_subparsers()
 
   parser_login = subparsers.add_parser('login')
-  parser.add_argument('--mail_tel', type=str)
-  parser.add_argument('--password', type=str)
+  parser_login.add_argument('--mail_tel', type=str)
+  parser_login.add_argument('--password', type=str)
   parser_login.set_defaults(handler=command_login)
 
   parser_following_lives = subparsers.add_parser('following_lives')
