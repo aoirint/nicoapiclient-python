@@ -1,6 +1,6 @@
 import os
 import requests
-from nicotoolspy.session import create_auth_session
+from nicotoolspy.session import create_session, create_auth_session
 from nicotoolspy.cli.login import login
 from nicotoolspy.auth.following_lives import following_lives
 from nicotoolspy.live.recent import recent_lives
@@ -29,7 +29,7 @@ def command_following_lives(args):
     print(f'[{community_name}] {title} (elapsed: {elapsed_time}s): {live_url}')
 
 def command_recent_lives(args):
-  session = create_auth_session(cookie_file=args.cookie_file)
+  session = create_session()
   lives = recent_lives(session=session)
 
   print(lives)
