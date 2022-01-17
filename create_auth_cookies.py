@@ -1,7 +1,8 @@
-import pickle as pkl
+import pickle
 from getpass import getpass
-from nicotoolspy.auth.create_auth_cookies import create_auth_cookies
+from nicotoolspy.login import create_auth_cookies
 from nicotoolspy.session import create_session
+
 
 if __name__ == '__main__':
   import argparse
@@ -32,4 +33,4 @@ if __name__ == '__main__':
   )
 
   with open(cookie_file, 'wb') as fp:
-    pkl.dump(session.cookies, fp)
+    pickle.dump(session.cookies, fp)

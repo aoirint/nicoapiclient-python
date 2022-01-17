@@ -1,4 +1,4 @@
-import pickle as pkl
+import pickle
 from requests import Session
 
 useragent = 'NicotoolspyBot @aoirint'
