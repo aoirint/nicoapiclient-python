@@ -208,7 +208,7 @@ async def start_keepalive_loop(
   try:
     while True:
       await client.sendEmpty()
-      await asyncio.sleep(60) # TODO: 60s interval
+      await asyncio.sleep(60)
   except websockets.ConnectionClosed:
     on_socket_closed()
   except asyncio.CancelledError:
